@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Claude Token Viewer
+Comment=Watch your Claude Code token usage
+Exec=/home/deck/dex-bot/steamdeck/launch-token-viewer.sh
+Icon=utilities-system-monitor
+Terminal=false
+Categories=Utility;
