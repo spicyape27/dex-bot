@@ -168,7 +168,8 @@ def add(bucket, rec):
     bucket["messages"] += 1
 
 
-def build_summary(records, days=30):
+def build_summary(scanner, days=30):
+    records = scanner.records()
     today = datetime.now().date()
     start = today - timedelta(days=days - 1)
     day_buckets = {start + timedelta(days=i): zero() for i in range(days)}
@@ -218,7 +219,7 @@ def build_summary(records, days=30):
             "week": totals(today - timedelta(days=6)),
             "month": totals(start),
         },
-        "sources": [str(d) for d in SCANNER.claude_dirs],
+        "sources": [str(d) for d in scanner.claude_dirs],
     }
 
 
@@ -239,7 +240,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path.startswith("/api/usage"):
-            data = build_summary(SCANNER.records())
+            data = build_summary(SCANNER)
             self._send(200, "application/json", json.dumps(data).encode())
         elif self.path == "/" or self.path.startswith("/index"):
             self._send(200, "text/html; charset=utf-8", PAGE.encode())
