@@ -1,0 +1,9 @@
+*.gguf
+*.bin
+*.wav
+*.m4a
+__pycache__/
+*.pyc
+logs/
+.assistant_tmp/
+.pytest_cache/

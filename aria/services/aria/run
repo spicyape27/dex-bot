@@ -1,0 +1,8 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# runit service: Aria HTTP endpoint. Waits for the brain to be actually
+# ready (/health = 200) before starting — replaces the old sleep-15 race.
+exec 2>&1
+until curl -sf -m 3 http://127.0.0.1:8080/health >/dev/null; do
+    sleep 2
+done
+exec python "$HOME/aria/edge_assistant.py" --serve
