@@ -1,0 +1,5 @@
+# Model integrity manifest — install.sh fills this automatically on first run
+# (then verifies on every run). Commit the filled version.
+# Manual fill: sha256sum ~/models/*.gguf ~/whisper.cpp/models/ggml-*.bin > models.sha256
+# Compare GGUF hashes against the published SHA256 on the HuggingFace file page.
+FILL_ME_BY_RUNNING_install.sh

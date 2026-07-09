@@ -1,0 +1,17 @@
+#!/data/data/com.termux/files/usr/bin/sh
+# runit service: llama-server (the brain). Installed by install.sh to
+# $PREFIX/var/service/llama/run. `exec` is load-bearing — runsv must
+# supervise the server PID itself, not a wrapper shell.
+exec 2>&1
+TOKEN=$(cat "$HOME/.aria_token" 2>/dev/null)
+exec "$HOME/llama.cpp/build/bin/llama-server" \
+    -m "$HOME/models/Llama-3.2-3B-Instruct-Q4_K_M.gguf" \
+    -c 4096 --host 127.0.0.1 --port 8080 --jinja \
+    -t 4 --cache-reuse 256 --cache-ram 512 -np 1 \
+    ${TOKEN:+--api-key "$TOKEN"}
+
+# Performance flags to A/B after the KleidiAI rebuild (RUNBOOK phase 2):
+#   -fa on -ctk q8_0 -ctv q8_0     # flash attention + quantized KV cache
+#   -c 2048                        # halves KV RAM if memory gets tight
+# Model swap after the bake-off (RUNBOOK phase 3): change -m to the Q4_0
+# GGUF of the winner (Qwen3-4B-Instruct-2507 or LFM2-2.6B).

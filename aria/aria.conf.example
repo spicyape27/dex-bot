@@ -1,0 +1,52 @@
+# Aria configuration — copy to ~/.aria.conf and edit.
+# Every value here matches the in-code default; the file is OPTIONAL.
+# Tuning experiments belong here, not in edge_assistant.py.
+
+[server]
+llama_url = http://127.0.0.1:8080
+serve_host = 127.0.0.1
+serve_port = 8100
+
+[models]
+whisper_bin = ~/whisper.cpp/build/bin/whisper-cli
+# fast model for wake detection / short clips
+whisper_model = ~/whisper.cpp/models/ggml-tiny.en.bin
+# better-WER model for the actual question (used if the file exists)
+whisper_model_long = ~/whisper.cpp/models/ggml-base.en.bin
+whisper_threads = 4
+# optional: Silero VAD model for whisper-cli --vad (download via
+# whisper.cpp/models/download-vad-model.sh); empty = off
+whisper_vad_model =
+
+[voice]
+# whisper transcribes the name many ways; list them all, comma-separated
+wake_words = aria, arya, area, ariya
+# termux = chunked termux-microphone-record (safe default, has 1-2s seams)
+# pulse  = continuous gapless capture (needs pulseaudio + module-sles-source,
+#          see RUNBOOK.md phase 2 — test before switching!)
+backend = termux
+idle_listen_seconds = 4
+chunk_seconds = 5
+max_chunks = 6
+# after answering, stay hot this many seconds for a follow-up (no wake word)
+follow_up_seconds = 8
+# pulse backend VAD tuning
+vad_rms_threshold = 500
+vad_silence_ms = 700
+vad_max_utterance_s = 30
+
+[llm]
+temperature = 0.6
+max_tokens = 300
+max_tool_rounds = 3
+timeout_seconds = 120
+# stream tokens and speak sentence-by-sentence (huge felt-latency win)
+stream = true
+# how many past exchanges to send as context
+history_turns = 6
+# send ~/.aria_token as Bearer key (boot script passes --api-key to llama-server)
+use_api_key = true
+
+[memory]
+enabled = true
+max_facts_in_prompt = 12
